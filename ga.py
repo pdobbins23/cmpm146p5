@@ -86,8 +86,18 @@ class Individual_Grid(object):
             for x in range(left, right):
                 # STUDENT Which one should you take?  Self, or other?  Why?
                 # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
-                pass
+                if random.random() < 0.5:
+                    new_genome[y][x] = self.genome[y][x]
+                else:
+                    new_genome[y][x] = other.genome[y][x]
+
+                # constraint: no floating pipes
+                if new_genome[y][x] == "pipe" and (y == 0 or new_genome[y - 1][x] == "-"):
+                    new_genome[y][x] = "-"
+
         # do mutation; note we're returning a one-element tuple here
+        new_genome = self.mutate(new_genome)
+        
         return (Individual_Grid(new_genome),)
 
     # Turn the genome into a level string (easy for this genome)
@@ -339,14 +349,50 @@ class Individual_DE(object):
         ]) for i in range(elt_count)]
         return Individual_DE(g)
 
+# Individual = Individual_Grid
+Individual = Individual_DE
 
-Individual = Individual_Grid
+def tournament_selection(population, fitness_scores, size=3):
+    selected_parents = []
+    for _ in range(len(population)):
+        tournament = random.sample(list(zip(population, fitness_scores)), size)
+        best_individual = max(tournament, key=lambda item: item[1])[0]
+        selected_parents.append(best_individual)
+    return selected_parents
 
+def rank_selection(population, fitness_scores):
+    paired_population = list(zip(population, fitness_scores))
+    sorted_population = sorted(paired_population, key=lambda x: x[1], reverse=True)
+
+    total_rank = len(population) * (len(population) + 1) / 2
+    selected_individuals = []
+
+    for _ in range(len(population)):
+        selection_point = random.uniform(0, total_rank)
+        sum = 0
+
+        for rank, (individual, _) in enumerate(sorted_population, start=1):
+            sum += rank
+            if sum >= selection_point:
+                selected_individuals.append(individual)
+                break
+
+    return selected_individuals
 
 def generate_successors(population):
+    fitness_scores = [individual.fitness() for individual in population]
+
+    parents = tournament_selection(population, fitness_scores) if random.random() < 0.5 else rank_selection(population, fitness_scores)
+
     results = []
-    # STUDENT Design and implement this
-    # Hint: Call generate_children() on some individuals and fill up results.
+    while len(results) < len(population):
+        p1, p2 = random.sample(parents, 2)
+
+        children = p1.generate_children(p2)
+
+        for child in children:
+            results.append(child)
+    
     return results
 
 
