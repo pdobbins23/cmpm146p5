@@ -388,6 +388,9 @@ def generate_successors(population):
     while len(results) < len(population):
         p1, p2 = random.sample(parents, 2)
 
+        if len(p1.genome) == 0 or len(p2.genome) == 0:
+            continue
+
         children = p1.generate_children(p2)
 
         for child in children:
