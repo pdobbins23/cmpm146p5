@@ -435,7 +435,7 @@ def ga():
                     print("Net time:", now - start)
                     with open("levels/last.txt", 'w') as f:
                         for row in best.to_level():
-                            f.write("".join(row) + "\n")
+                            f.write("".join(row) + "---\n") # added 3 - for air blocks to make exit show up
                 generation += 1
                 # STUDENT Determine stopping condition
                 stop_condition = False
@@ -467,4 +467,4 @@ if __name__ == "__main__":
     for k in range(0, 10):
         with open("levels/" + now + "_" + str(k) + ".txt", 'w') as f:
             for row in final_gen[k].to_level():
-                f.write("".join(row) + "\n")
+                f.write("".join(row) + "---\n") # added 3 - for air blocks to make exit show up
