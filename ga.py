@@ -63,16 +63,23 @@ class Individual_Grid(object):
         return self._fitness
 
     # Mutate a genome into a new genome.  Note that this is a _genome_, not an individual!
-    def mutate(self, genome):
-        # STUDENT implement a mutation operator, also consider not mutating this individual
-        # STUDENT also consider weighting the different tile types so it's not uniformly random
-        # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
+    # def mutate(self, genome):
+    #     # STUDENT implement a mutation operator, also consider not mutating this individual
+    #     # STUDENT also consider weighting the different tile types so it's not uniformly random
+    #     # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
 
-        left = 1
-        right = width - 1
+    #     left = 1
+    #     right = width - 1
+    #     for y in range(height):
+    #         for x in range(left, right):
+    #             pass
+    #     return genome
+    def mutate(self, genome):
+        mutation_rate = 0.01  # 1% chance to mutate each tile
         for y in range(height):
-            for x in range(left, right):
-                pass
+            for x in range(width):
+                if random.random() < mutation_rate:
+                    genome[y][x] = random.choice(options)
         return genome
 
     # Create zero or more children from self and other
@@ -349,8 +356,8 @@ class Individual_DE(object):
         ]) for i in range(elt_count)]
         return Individual_DE(g)
 
-# Individual = Individual_Grid
-Individual = Individual_DE
+Individual = Individual_Grid
+# Individual = Individual_DE
 
 def tournament_selection(population, fitness_scores, size=3):
     selected_parents = []
