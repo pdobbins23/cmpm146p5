@@ -84,28 +84,41 @@ class Individual_Grid(object):
 
     # Create zero or more children from self and other
     def generate_children(self, other):
+        if not self.genome or not other.genome:
+            return (Individual_Grid(self.mutate(copy.deepcopy(self.genome))),)
+    
         new_genome = copy.deepcopy(self.genome)
-        # Leaving first and last columns alone...
-        # do crossover with other
         left = 1
         right = width - 1
         for y in range(height):
             for x in range(left, right):
-                # STUDENT Which one should you take?  Self, or other?  Why?
-                # STUDENT consider putting more constraints on this to prevent pipes in the air, etc
                 if random.random() < 0.5:
                     new_genome[y][x] = self.genome[y][x]
                 else:
                     new_genome[y][x] = other.genome[y][x]
 
-                # constraint: no floating pipes
-                if new_genome[y][x] == "pipe" and (y == 0 or new_genome[y - 1][x] == "-"):
+                # Prevent floating pipes
+                if new_genome[y][x] == "T" and (y == 0 or new_genome[y - 1][x] not in ["|", "T"]):
+                    new_genome[y][x] = "-"
+                if new_genome[y][x] == "|" and (y == 0 or new_genome[y - 1][x] == "-"):
                     new_genome[y][x] = "-"
 
-        # do mutation; note we're returning a one-element tuple here
+                # no floating blocks
+                if new_genome[y][x] in ["B", "?", "M"] and (y == 0 or new_genome[y - 1][x] == "-"):
+                    new_genome[y][x] = "-"
+
+                #  enemies are on the ground
+                if new_genome[y][x] == "E" and (y == 0 or new_genome[y - 1][x] == "-"):
+                    new_genome[y][x] = "-"
+
+        # ground continuity
+        for x in range(width):
+            if new_genome[height - 1][x] != "X":
+                new_genome[height - 1][x] = "X"
+
         new_genome = self.mutate(new_genome)
-        
         return (Individual_Grid(new_genome),)
+
 
     # Turn the genome into a level string (easy for this genome)
     def to_level(self):
