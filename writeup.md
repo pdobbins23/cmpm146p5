@@ -1,5 +1,7 @@
 # Write-up
 
+Peter Dobbins, Navya Gulati
+
 We are not participating in the competition.
 
 ## Explanations
@@ -39,7 +41,9 @@ These selection strategies are used by randomly selecting which one to use on ea
 
 ## Favorite Levels
 
+NOTE: Just to clarify, our level we provided is beatable, even if it doesn't look like it :D
+
 We picked our two favorite levels because they were fun and also challenging, with awkward platforms and jumps, making the levels more interesting and unique.
-They definitely aren't the prettiest levels, but they are fun and entertaining and in some cases feel like a puzzle.
+They definitely aren't the prettiest levels, but they are fun and entertaining and feel like a puzzle.
 
 Each of the levels were generated until the 30th generation, which took about 3 minutes of computation time.
